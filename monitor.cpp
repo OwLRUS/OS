@@ -3,7 +3,8 @@
 #include <pthread.h>
 #include "windows.h"
 
-typedef struct {
+typedef struct 
+{
 	pthread_cond_t cond;
 	pthread_mutex_t lock;
 	bool ready;
@@ -17,7 +18,8 @@ Monitor monitor = {
 	monitor.value = 0
 };
 
-void* produce(void* arg) {
+void* produce(void* arg) 
+{
 	for (;;) {
 		int value = rand();
 		pthread_mutex_lock(&monitor.lock);
@@ -37,7 +39,8 @@ void* produce(void* arg) {
 	}
 }
 
-void* consume(void* arg) {
+void* consume(void* arg) 
+{
 	for(;;) {
 		pthread_mutex_lock(&monitor.lock);
 
@@ -53,7 +56,8 @@ void* consume(void* arg) {
 	}
 }
 
-int main() {
+int main() 
+{
 	pthread_t provider;
 	pthread_t consumer;
 
