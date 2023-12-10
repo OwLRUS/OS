@@ -106,15 +106,18 @@ int main()
                 std::cout << "Accept failed" << std::endl;
                 return 1;
             }
-            for (int i = 0; i < MAX_CLIENTS; ++i) 
+            bool flag = false;
+            for (int i = 0; i < MAX_CLIENTS; ++i)
             {
-                if (client_fds[i] == -1) 
+                if (client_fds[i] == -1)
                 {
                     client_fds[i] = client_fd;
+                    flag = true;
                     break;
                 }
             }
-            std::cout << "New connection accepted" << std::endl;
+            if (!flag) std::cout << "New connection accepted" << std::endl;
+                else std::cout << "New connection declined. The maximum number of users has been exceeded" << std::endl;
 		}
 		for (int i = 0; i < MAX_CLIENTS; i++) 
 		{
