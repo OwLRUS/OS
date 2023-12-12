@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include "windows.h"
+#include <chrono>
+#include <thread>
 
 typedef struct 
 {
@@ -32,7 +34,7 @@ void* produce(void* arg)
 		monitor.value = value;
 		monitor.ready = true;
 		printf("produce value: %d\n", monitor.value);
-		Sleep(100);
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 		pthread_cond_signal(&monitor.cond);
 		pthread_mutex_unlock(&monitor.lock);
@@ -50,7 +52,7 @@ void* consume(void* arg)
 
 		monitor.ready = false;
 		printf(" consume value: %d\n", monitor.value);
-		Sleep(100);
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 		pthread_mutex_unlock(&monitor.lock);
 	}
