@@ -14,5 +14,5 @@ pr_info("Tomsk State University forever!\n");
 }
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Fedor P");
+MODULE_AUTHOR("Brits V");
 MODULE_DESCRIPTION("A simple kernel module");
