@@ -1,10 +1,14 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <pthread.h>
 #include <chrono>
 #include <thread>
 
-typedef struct 
+#define ERROR_CREATE_THREAD -11
+#define ERROR_JOIN_THREAD   -12
+#define SUCCESS        0
+
+typedef struct
 {
 	pthread_cond_t cond;
 	pthread_mutex_t lock;
@@ -19,17 +23,17 @@ Monitor monitor = {
 	monitor.value = 0
 };
 
-void* produce(void* arg) 
+void* produce(void* arg)
 {
 	for (;;) {
 		int value = rand();
 		pthread_mutex_lock(&monitor.lock);
-		
+
 		if (monitor.ready) {
 			pthread_mutex_unlock(&monitor.lock);
 			continue;
 		}
-		
+
 		monitor.value = value;
 		monitor.ready = true;
 		printf("produce value: %d\n", monitor.value);
@@ -40,9 +44,9 @@ void* produce(void* arg)
 	}
 }
 
-void* consume(void* arg) 
+void* consume(void* arg)
 {
-	for(;;) {
+	for (;;) {
 		pthread_mutex_lock(&monitor.lock);
 
 		while (monitor.ready == false) {
@@ -57,7 +61,7 @@ void* consume(void* arg)
 	}
 }
 
-int main() 
+int main()
 {
 	pthread_t provider;
 	pthread_t consumer;
@@ -66,25 +70,25 @@ int main()
 
 	status = pthread_create(&provider, NULL, produce, NULL);
 	if (status != 0) {
-		cout << "main error: can't create thread\n";
+		std::cout << "main error: can't create thread\n";
 		exit(ERROR_CREATE_THREAD);
 	}
 
 	status = pthread_create(&consumer, NULL, consume, NULL);
 	if (status != 0) {
-		cout << "main error: can't create thread\n";
+		std::cout << "main error: can't create thread\n";
 		exit(ERROR_CREATE_THREAD);
 	}
 
 	pthread_join(provider, NULL);
 	if (status != SUCCESS) {
-		cout << "main error: can't join thread\n";
+		std::cout << "main error: can't join thread\n";
 		exit(ERROR_JOIN_THREAD);
 	}
 
 	pthread_join(consumer, NULL);
 	if (status != SUCCESS) {
-		cout << "main error: can't join thread\n";
+		std::cout << "main error: can't join thread\n";
 		exit(ERROR_JOIN_THREAD);
 	}
 	return 0;
